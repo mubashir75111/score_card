@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  matches Match[]
+}
+
+model Match {
+  id          Int       @id @default(autoincrement())
+  Team_A      String
+  Team_A_Pic String?
+  Team_B      String
+  Team_B_Pic String?
+  Start_Time  DateTime
+  Venue       String
+  userId      Int
+  Status      String    @default("Pending")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user       User     @relation(fields: [userId], references: [id])
+  // Relations
+  players     Players[]
+  goals       Goals[]
+}
+
+model Players {
+  id           Int       @id @default(autoincrement())
+  Match_id     Int
+  Team         String
+  Player_name  String
+  Player_Pic String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relation with Match
+  match        Match      @relation(fields: [Match_id], references: [id], onDelete: Cascade)
+
+  // Relation with Goals
+  goals        Goals[]
+}
+
+model Goals {
+  id          Int       @id @default(autoincrement())
+  Match_id    Int
+  Player_id   Int
+  Shot_type   String
+  Team        String
+  Is_goal     Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relation with Match
+  match        Match     @relation(fields: [Match_id], references: [id], onDelete: Cascade)
+
+  // Relation with Player
+  player       Players   @relation(fields: [Player_id], references: [id], onDelete: Cascade)
+}

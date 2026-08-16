@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Goals" ALTER COLUMN "Shot_type" SET DEFAULT 'None',
+ALTER COLUMN "Team_A_goal" SET DEFAULT 0,
+ALTER COLUMN "Team_B_goal" SET DEFAULT 0;
